@@ -19,7 +19,7 @@ with open("../data/DDD_TRRs.annotated.highcov.txt", 'r') as wc_regs:
             query = chr + ":" + start + ".." + stop + ":1"  # e.g. X:1000000..1000100:1
 
             try:
-                seq = e().get_sequence_by_region(query, species="human", coord_system_version="GRCh37.p13").get('seq')
+                seq = e().get_sequence_by_region(query, species="human", coord_system_version="GRCh37").get('seq')
             except AttributeError:  # seq is integer 400 - means server error. this occurred at end of chr 4 (off edge)
                 print 'Could not query region...'
                 unqueryable.append(line)
