@@ -2,7 +2,7 @@
 # 1. same as rupit (but alter to assign to specific position)
 # 2. bootstrapping (i.e. draw random regions with replacement) and pick location of mutation based on null sequence model
 
-source("/Users/ps14/code/rupit/R/regmut_null_model.R")
+source("../../rupit/R/regmut_null_model.R") # respects the hierarchy as organized on the farm and locally
 
 # load list of filtered de novos - run rupit_core.R function "filter_denovos" if not yet filtered
 DENOVOS_PATH = "/Users/ps14/code/TFBS_analysis/data/de_novo_filtered.txt"

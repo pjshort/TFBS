@@ -5,8 +5,6 @@ library(TFBSTools)
 library(JASPAR2014)
 library(Biostrings)
 
-
-
 get_TFBS_bp_coverage <- function(site_set){
   
   # helper function for TFBS_bp_coverage

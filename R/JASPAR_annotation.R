@@ -18,7 +18,7 @@ option_list <- list(
               help="Pass the observed de novos - these will be analyzed in order to shorten the list of TF binding sites used for prediction."),
   make_option("--full_jaspar", default=TRUE,
               help="If TRUE annotates regions with the full JASPAR Homo Sapiens set."),
-  make_option("--out", default="./regions_JASPAR_annotated.txt",
+  make_option("--out", default="../data/regions_JASPAR_annotated.txt",
               help="Set location to save the (likely large) tab-delimited text file storing JASPAR annotations.")
 )
 
