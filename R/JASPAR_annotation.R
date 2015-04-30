@@ -14,7 +14,7 @@ option_list <- list(
               help="Pass the genomic regions that should be annotated with predicted TF binding sites."),
   make_option("--de_novos", default="../data/de_novo_filtered.txt",
               help="Pass the observed de novos - these will be analyzed in order to shorten the list of TF binding sites used for prediction."),
-  make_option("--full_jaspar", default=TRUE,
+  make_option("--full_jaspar", action="store_true", default=TRUE,
               help="If TRUE annotates regions with the full JASPAR Homo Sapiens set."),
   make_option("--out", default="../data/regions_JASPAR_annotated.txt",
               help="Set location to save the (likely large) tab-delimited text file storing JASPAR annotations.")
@@ -26,8 +26,13 @@ args <- parse_args(OptionParser(option_list=option_list))
 if ( args$verbose ) {
   write("Loading JASPAR position weight matrices from database...", stderr())
 }
-opts = list("species" = "Homo sapiens", "all_versions" = args$full_jaspar, "matrixtype" = "PWM")
+
+# NOTE: only need to initalize DB once - this should be done on install...?
+#db = "myMatrixDb.sqlite"
+#initializeJASPARDB(db)
+opts = list("species" = 9606, "all_versions" = args$full_jaspar, "matrixtype" = "PWM") # 9606 = "homo sapiens"
 pwm_list = getMatrixSet(JASPAR2014, opts)
+
 
 # de novos are filtered for pp_dnm > 0.1 and non-coding only
 de_novo_filtered <- read.table(args$de_novos, sep="\t", header=TRUE)
