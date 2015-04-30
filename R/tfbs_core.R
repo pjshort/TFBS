@@ -4,8 +4,10 @@
 library(TFBSTools)
 library(JASPAR2014)
 library(Biostrings)
+library(jsonlite)
 
-get_TFBS_bp_coverage <- function(site_set){
+
+get_single_site_bp_coverage <- function(site_set){
   
   # helper function for TFBS_bp_coverage
   
@@ -23,7 +25,7 @@ TFBS_bp_coverage <- function(seq, pwm_list, min.score = "95%"){
   
   subject = DNAString(seq)
   site_seq_list = searchSeq(pwm_list, subject, seqname="seq1", min.score=min.score, strand="*")
-  TFBS_count = sapply(site_seq_list, get_TFBS_bp_coverage)
+  TFBS_count = sapply(site_seq_list, get_single_site_bp_coverage)
   coverage_list = unlist(IRangesList(TFBS_count))
   x = coverage_list[1:length(coverage_list)-1]
   y = coverage_list[length(coverage_list)]
@@ -34,7 +36,7 @@ TFBS_bp_coverage <- function(seq, pwm_list, min.score = "95%"){
 TFBS_hits <- function(seq, rel_pos, pwm_list, min.score = "95%"){
   
   # returns 0 or 1 for each TFBS in the pwm_list
-  # one de novo may fall in multiple TFBS, or multiple instances of one TFBS (in this case, 1 still returned)
+  # one de novo may fall in multiple TFBS, or multiple instances of one TFBS (in this case eg highly repeated sections, 1 is still returned)
   
   subject = DNAString(seq)
   site_seq_list = searchSeq(pwm_list, subject, seqname="seq1", min.score=min.score, strand="*")
@@ -42,7 +44,7 @@ TFBS_hits <- function(seq, rel_pos, pwm_list, min.score = "95%"){
 }
 
 
-# Functions to annotate regions with predicted transcription factor binding sites
+## Functions to annotate regions with predicted transcription factor binding sites
 
 single_sequence_coverage <- function(seq, pwm_list, min.score = "95%"){
   
@@ -63,7 +65,7 @@ scan_regions <- function(regions, pwm_list, min.score = "95%"){
 }
 
 
-# Functions to check overlap with PWM seq_list object
+## Functions to check overlap with PWM seq_list object
 
 check_overlap <- function(intervals, rel_pos){
   
@@ -79,4 +81,12 @@ regions_TFBS_overlap <- function(region_ids, positions, interval_list){
   # returns TF overlaps for every region_id, position pair that is passed
   TF_overlaps = mapply(function(r, p) check_overlap(interval_list[r][[1]], p), region_ids, positions)
   return(TF_overlaps)  
+}
+
+save_to_json <- function(l, fname){
+  json = toJSON(l, pretty = TRUE)
+  save_name = sprintf(fname)
+  sink(save_name)
+  cat(json)
+  sink()
 }
