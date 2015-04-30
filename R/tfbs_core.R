@@ -6,7 +6,6 @@ library(JASPAR2014)
 library(Biostrings)
 library(jsonlite)
 
-
 get_single_site_bp_coverage <- function(site_set){
   
   # helper function for TFBS_bp_coverage
@@ -67,20 +66,19 @@ scan_regions <- function(regions, pwm_list, min.score = "95%"){
 
 ## Functions to check overlap with PWM seq_list object
 
-check_overlap <- function(intervals, rel_pos){
+check_overlap <- function(region_id, pos, JASPAR_annotation){
   
-  # return any TF binding sites that rel_pos coincides with
-  dist = rel_pos - intervals@start
-  hits = which(dist >= 0 & dist < intervals@width)
-  TFs = intervals@NAMES[hits]
-  return(TFs)
+  # return any TF binding sites that pos coincides with
+  region_slice = JASPAR_annotation[JASPAR_annotation$region_id == region_id, ]
+  region_slice[region_slice$start < pos & region_slice$stop > pos, ]
+  return(region_slice$name)
 }
 
-regions_TFBS_overlap <- function(region_ids, positions, interval_list){
+regions_TFBS_overlap <- function(region_ids, positions, JASPAR_annotation){
   
   # returns TF overlaps for every region_id, position pair that is passed
   TF_overlaps = mapply(function(r, p) check_overlap(interval_list[r][[1]], p), region_ids, positions)
-  return(TF_overlaps)  
+  return(TF_overlaps)
 }
 
 save_to_json <- function(l, fname){

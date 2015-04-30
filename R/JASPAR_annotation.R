@@ -1,10 +1,8 @@
 # scan all of the well-covered regions with the pwm list and save output
 
-# accept command line arguments, first one is the list of de_novos that pass filtering, second is all well_covered_regions
-args <- commandArgs(trailingOnly = TRUE)
-
+# dependencies and libraries
 source("simulate.R")
-source("tfbs_core.R")
+source("tfbs_core.R") # depends on TFBSTools, JASPAR2014, BioStrings
 source("visualization.R")
 library(optparse)
 
@@ -45,6 +43,9 @@ dcr = well_covered_regions[well_covered_regions$n_snp > 0 | well_covered_regions
 dcr = merge(dcr, de_novo_filtered[, c("region_id", "pos", "ref", "alt", "person_stable_id")], by = "region_id")
 dcr$rel_pos = dcr$pos - dcr$start
 
+# REMOVE THIS - ONLY FOR TESTING
+dcr = dcr[1:100, ]
+
 if ( args$verbose ) {
   write("Starting primary scan to identify TFBS of interest from de novo set.", stderr())
 }
@@ -65,6 +66,8 @@ pwm_list = pwm_list[recurrent_TFBS]
 if ( args$verbose ) {
   write("Scanning all regions supplied against TFBS identified in primary scan.", stderr())
 }
+
+# EDIT THIS - ONLY FOR TESTING
 scanned_regions = scan_regions(well_covered_regions[1:68,], pwm_list, min.score = "95%")
 
 # make a dataframe containing region IDs and predicted TF binding sites in these regions
