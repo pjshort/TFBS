@@ -37,5 +37,4 @@ simulate_de_novos <- function(regions, seq_probabilities, snp_total, iterations)
   return(sim_output)
 }
 
-scan_region <- function(pwm_list)
 

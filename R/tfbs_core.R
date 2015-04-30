@@ -52,7 +52,7 @@ single_sequence_coverage <- function(seq, pwm_list, min.score = "95%"){
   subject = DNAString(seq)
   site_seq_list = searchSeq(pwm_list, subject, seqname="seq1", min.score=min.score, strand="*")
   sequence_coverage = sapply(site_seq_list, get_TFBS_bp_coverage)
-  coverage_list = unlist(IRangesList(TFBS_count))
+  coverage_list = unlist(IRangesList(sequence_coverage))
   return(coverage_list)
 }
 
