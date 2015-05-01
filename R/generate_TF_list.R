@@ -42,8 +42,6 @@ dcr = well_covered_regions[well_covered_regions$n_snp > 0 | well_covered_regions
 dcr = merge(dcr, de_novo_filtered[, c("region_id", "pos", "ref", "alt", "person_stable_id")], by = "region_id")
 dcr$rel_pos = dcr$pos - dcr$start
 
-dcr = dcr[1:20,]
-
 if ( args$verbose ) {
   write("Starting primary scan to identify TFBS of interest from de novo set.", stderr())
 }

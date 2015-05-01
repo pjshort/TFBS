@@ -49,7 +49,7 @@ if ( args$verbose ) {
   write("Scanning all regions supplied against TFBS identified in primary scan.", stderr())
 }
 
-scanned_regions = scan_regions(well_covered_regions[1:10,], pwm_list_reduced, min.score = args$min_score)
+scanned_regions = scan_regions(well_covered_regions, pwm_list_reduced, min.score = args$min_score)
 
 # make a dataframe containing region IDs and predicted TF binding sites in these regions
 region_dfs = mapply(function(s, n) data.frame(region_id = rep(n, length(s)), start=s@start, stop=s@start+s@width - 1, name = s@NAMES), scanned_regions, names(scanned_regions), SIMPLIFY = FALSE)
