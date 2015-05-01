@@ -48,9 +48,6 @@ dcr = well_covered_regions[well_covered_regions$n_snp > 0 | well_covered_regions
 dcr = merge(dcr, de_novo_filtered[, c("region_id", "pos", "ref", "alt", "person_stable_id")], by = "region_id")
 dcr$rel_pos = dcr$pos - dcr$start
 
-# REMOVE THIS - ONLY FOR TESTING
-dcr = dcr[1:100, ]
-
 if ( args$verbose ) {
   write("Starting primary scan to identify TFBS of interest from de novo set.", stderr())
 }
@@ -73,7 +70,7 @@ if ( args$verbose ) {
 }
 
 # EDIT THIS - ONLY FOR TESTING
-scanned_regions = scan_regions(well_covered_regions[1:6,], pwm_list, min.score = "95%")
+scanned_regions = scan_regions(well_covered_regions[1:68,], pwm_list, min.score = "95%")
 
 # make a dataframe containing region IDs and predicted TF binding sites in these regions
 region_dfs = mapply(function(s, n) data.frame(region_id = rep(n, length(s)), start=s@start, stop=s@start+s@width - 1, name = s@NAMES), scanned_regions, names(scanned_regions), SIMPLIFY = FALSE)
