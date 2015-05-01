@@ -44,12 +44,15 @@ if (args$full_jaspar == FALSE){  # if args$full_jaspar is TRUE use the entire JA
   pwm_list_reduced = pwm_list[unique(TFBS_to_scan$jaspar_internal)]
 }
 
-# NOTE: this scanning is the longest step to complete
 if ( args$verbose ) {
-  write("Scanning all regions supplied against TFBS identified in primary scan.", stderr())
+  write(sprintf("Scanning %i regulatory regions with %i different TF binding motifs...", nrow(well_covered_regions), length(pwm_list_reduced)), stderr())
 }
 
 scanned_regions = scan_regions(well_covered_regions, pwm_list_reduced, min.score = args$min_score)
+
+if ( args$verbose ) {
+  write(sprintf("Finished scanning. Scanned regions list has %i entries.", length(scanned_regions)), stderr())
+}
 
 # make a dataframe containing region IDs and predicted TF binding sites in these regions
 region_dfs = mapply(function(s, n) data.frame(region_id = rep(n, length(s)), start=s@start, stop=s@start+s@width - 1, name = s@NAMES), scanned_regions, names(scanned_regions), SIMPLIFY = FALSE)
@@ -58,6 +61,10 @@ full_df$tf_name = sapply(as.character(full_df$name), function(n) pwm_list[[n]]@n
 full_df$family = sapply(as.character(full_df$name), function(n) pwm_list[[n]]@tags$family)
 full_df$alias = sapply(as.character(full_df$name), function(n) pwm_list[[n]]@tags$alias)
 full_df$alias = vapply(full_df$alias, paste, collapse = ", ", character(1L))  # removes the NULL entries (turning to empty)
+
+if ( args$verbose ) {
+  write(sprintf("Full dataframe for output has %i rows and %i columns.", nrow(full_df), ncol(full_df)), stderr())
+}
 
 write.table(full_df, file = args$out, row.names = FALSE, sep = "\t", col.names = TRUE)
 if ( args$verbose ) {
