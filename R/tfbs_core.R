@@ -50,7 +50,7 @@ single_sequence_coverage <- function(seq, pwm_list, min.score = "95%"){
   # returns the percentage of the sequence queried that is covered by a putative TFBS
   subject = DNAString(seq)
   site_seq_list = searchSeq(pwm_list, subject, seqname="seq1", min.score=min.score, strand="*")
-  sequence_coverage = sapply(site_seq_list, get_TFBS_bp_coverage)
+  sequence_coverage = sapply(site_seq_list, get_single_site_bp_coverage)
   coverage_list = unlist(IRangesList(sequence_coverage))
   return(coverage_list)
 }
@@ -77,7 +77,7 @@ check_overlap <- function(region_id, pos, JASPAR_annotation){
 regions_TFBS_overlap <- function(region_ids, positions, JASPAR_annotation){
   
   # returns TF overlaps for every region_id, position pair that is passed
-  TF_overlaps = mapply(function(r, p) check_overlap(interval_list[r][[1]], p), region_ids, positions)
+  TF_overlaps = mapply(check_overlap, region_ids, positions, MoreArgs = list("JASPAR_annotation" = JASPAR_annotation))
   return(TF_overlaps)
 }
 

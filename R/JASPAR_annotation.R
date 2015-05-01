@@ -73,7 +73,7 @@ if ( args$verbose ) {
 }
 
 # EDIT THIS - ONLY FOR TESTING
-scanned_regions = scan_regions(well_covered_regions[1:68,], pwm_list, min.score = "95%")
+scanned_regions = scan_regions(well_covered_regions[1:6,], pwm_list, min.score = "95%")
 
 # make a dataframe containing region IDs and predicted TF binding sites in these regions
 region_dfs = mapply(function(s, n) data.frame(region_id = rep(n, length(s)), start=s@start, stop=s@start+s@width - 1, name = s@NAMES), scanned_regions, names(scanned_regions), SIMPLIFY = FALSE)
@@ -87,5 +87,14 @@ write.table(full_df, file = args$out, row.names = FALSE, sep = "\t", col.names =
 if ( args$verbose ) {
   write(sprintf("Finished! Regions annotated by JASPAR and saved to: %s", args$out), stderr())
 }
+
+
+
+# PICK UP HERE TOMORROW - want to run this job in an array with different chunks of well_covered_regions
+# ultimately these will be combined into the regions_JASPAR_annotated.txt that we require
+
+
+
+
 
 
