@@ -71,12 +71,12 @@ check_overlap <- function(region_id, pos, JASPAR_annotation){
   # return any TF binding sites that pos coincides with
   region_slice = JASPAR_annotation[JASPAR_annotation$region_id == region_id, ]
   pos_match = region_slice[region_slice$start < pos & region_slice$stop > pos, ]
-  return(pos_match$name)
+  return(as.character(pos_match$name))
 }
 
 regions_TFBS_overlap <- function(region_ids, positions, JASPAR_annotation){
   
-  # returns TF overlaps for every region_id, position pair that is passed
+  # returns TF overlaps for every region_id, position pair that is passed. must be relative position!
   JASPAR_annotation$region_id <- factor(JASPAR_annotation$region_id, levels = levels(region_ids))
   JA <- JASPAR_annotation[!is.na(JASPAR_annotation$region_id),]
   TF_overlaps = mapply(check_overlap, region_ids, positions, MoreArgs = list("JASPAR_annotation" = JA))
@@ -89,4 +89,32 @@ save_to_json <- function(l, fname){
   sink(save_name)
   cat(json)
   sink()
+}
+
+
+## merging and subtracting tables with different column spaces (by coercing to same column space) ##
+
+table_merge <- function(table1, table2, row.names = c("table1", "table2")){
+  all_names = unique(c(names(table1), names(table2)))
+  
+  # set up two new tables with shared names
+  new_table1 = table(row.names = all_names) - 1
+  new_table2 = table(row.names = all_names) - 1
+  
+  # set nonzero entries from original tables
+  new_table1[all_names %in% names(table1)] = table1
+  new_table2[all_names %in% names(table2)] = table2
+  m = rbind(new_table1, new_table2)
+  row.names(m) = row.names
+  
+  return(m)
+}
+
+table_diff <- function(table1, table2){
+  
+  # subtracts table2 from table1 and unifies the column names
+  
+  m = table_merge(table1, table2)
+  diff = m[1,] - m[2,]
+  return(diff)
 }

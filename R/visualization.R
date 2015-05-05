@@ -66,7 +66,7 @@ two_panel_hist <- function(counts1, counts2, xlab = "Counts", mains = c("Categor
   
 }
 
-stacked_bar <- function(counts, labels, group_names, ylab = "Counts", beside = FALSE){
+stacked_bar <- function(counts, labels, group_names, ylab = "Counts", beside = FALSE) {
   
   # plot a stacked bar graph
   par(mar=c(5,4,5,2) + 0.5)   # extra large bottom margin
@@ -75,6 +75,7 @@ stacked_bar <- function(counts, labels, group_names, ylab = "Counts", beside = F
   } else {
     col = col_list[[nrow(counts)]]
   }
-  barplot(counts, las=1, col = col, names.arg = labels, legend.text = group_names, ylab = ylab, beside = beside)
   
+  bar <- barplot(counts, las=1, col = col, names.arg = labels, legend.text = group_names, ylab = ylab, beside = beside)
+  return(bar)  
 }

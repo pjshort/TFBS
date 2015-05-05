@@ -3,6 +3,8 @@
 # 2. bootstrapping (i.e. draw random regions with replacement) and pick location of mutation based on null sequence model
 
 source("regmut_null_model.R") # respects the hierarchy as organized on the farm and locally
+source("tfbs_core.R")
+library(abind)
 
 # load list of filtered de novos - run rupit_core.R function "filter_denovos" if not yet filtered
 DENOVOS_PATH = "/Users/ps14/code/TFBS_analysis/data/de_novo_filtered.txt"
@@ -31,10 +33,44 @@ simulate_de_novos <- function(regions, seq_probabilities, snp_total, iterations)
   # populates a sparse matrix with counts of de novos in each region for each simulation
   
   regions$p_relative = regions$p_snp_null/sum(regions$p_snp_null)
-  
   # rows will be region and column will be count of de novos in each iteration
   sim_output = replicate(iterations, assign_position(regions, seq_probabilities, snp_total))
   return(sim_output)
 }
+
+simulation_TFBS_overlap <- function(s, JASPAR_annotation){
+  
+  # takes slice of sim_output called s and returns TF overlaps from JASPAR annotation provided
+  region_ids = s[1,]
+  positions = as.integer(s[2,])
+  # returns TF overlaps for every region_id, position pair that is passed
+  JA <- JASPAR_annotation[JASPAR_annotation$region_id %in% region_ids,]
+  JA$region_id <- factor(JA$region_id)  
+  TF_overlaps = mapply(check_overlap, region_ids, positions, MoreArgs = list("JASPAR_annotation" = JA))
+  counts_by_TFBS = table(unlist(TF_overlaps))
+  return(TF_overlaps)
+}
+
+jaspar_annotate <- function(sim_output, JASPAR_annotation){
+  
+  # take sim_output matrix (2 x n_snps x iterations) and add another layer (n_snps x iterations) which describes the
+  # number of TFBS each simulated snp disrupts
+  
+  # sim_output is a 2 x n_snps x iterations matrix. row 1 is region_id, row 2 is relative position.
+  tf_out <- apply(sim_output, MARGIN = 3, simulation_TFBS_overlap, "JASPAR_annotation" = JASPAR_annotation)
+  list_of_counts = as.integer(sapply(tf_out, function(x) sapply(x, length)))
+  names(list_of_counts) <- NULL  
+  
+  # add a third row to sim_output with number of TFBS disruptions per de_novo
+  sim_output = abind(sim_output, list_of_counts, along = 1)
+  
+  # get a list of tables of counts per TFBS
+  sim_TFBS_counts = lapply(tf_out, function(s) table(unlist(s)))
+  
+  return(list("sim_output" = sim_output, "sim_TFBS_counts" = sim_TFBS_counts))
+  
+}
+
+
 
 

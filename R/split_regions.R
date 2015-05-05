@@ -17,7 +17,7 @@ header = names(well_covered_regions)
 break_pts = seq(1, nrow(well_covered_regions), by = floor(nrow(well_covered_regions)/(args$n_chunks)))
 break_pts[length(break_pts)] = nrow(well_covered_regions) + 1
 
-for (i in seq(length(break_pts)-1)){
+rfor (i in seq(length(break_pts)-1)){
   fname = sprintf("%s.%i.txt", args$base_name, i)
   write.table(well_covered_regions[break_pts[i]:(break_pts[i+1] - 1),], file = fname, col.names = header, row.names = FALSE, sep="\t")
 }
