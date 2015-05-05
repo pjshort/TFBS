@@ -58,9 +58,11 @@ jaspar_annotate <- function(sim_output, JASPAR_annotation){
   
   # sim_output is a 2 x n_snps x iterations matrix. row 1 is region_id, row 2 is relative position.
   tf_out <- apply(sim_output, MARGIN = 3, simulation_TFBS_overlap, "JASPAR_annotation" = JASPAR_annotation)
-  list_of_counts = as.integer(sapply(tf_out, function(x) sapply(x, length)))
-  names(list_of_counts) <- NULL  
+  list_of_counts = sapply(tf_out, function(x) sapply(x, length))
+  row.names(list_of_counts) <- NULL  
   
+  # TODO: sort out strange behavior where sim_output[3,,] has named rows - possibly because matrix must have 
+  # all characters or all integers ( no mixed types)?
   # add a third row to sim_output with number of TFBS disruptions per de_novo
   sim_output = abind(sim_output, list_of_counts, along = 1)
   
@@ -68,7 +70,6 @@ jaspar_annotate <- function(sim_output, JASPAR_annotation){
   sim_TFBS_counts = lapply(tf_out, function(s) table(unlist(s)))
   
   return(list("sim_output" = sim_output, "sim_TFBS_counts" = sim_TFBS_counts))
-  
 }
 
 
