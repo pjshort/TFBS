@@ -24,7 +24,7 @@ if ( args$verbose ) {
 
 # NOTE: only need to initalize DB once - this should be done on install...?
 #db = "myMatrixDb.sqlite"
-#initializeJASPARDB(db)
+#initializeJASPARDB(db) 
 opts = list("species" = 9606, "all_versions" = TRUE, "matrixtype" = "PWM") # 9606 = "homo sapiens"
 pwm_list = getMatrixSet(JASPAR2014, opts)
 
