@@ -33,22 +33,21 @@ if ( args$verbose ) {
 opts = list("species" = 9606, "all_versions" = TRUE, "matrixtype" = "PWM") # 9606 = "homo sapiens"
 pwm_list = getMatrixSet(JASPAR2014, opts)
 
-# load the names of TFs that we want to scan for
-TFBS_to_scan = read.table("../data/TFs_in_DDD_data.txt", header = TRUE)
-
 # regions are annotated by n_snps and n_indels - created by rupit/R/pre_process.R
 well_covered_regions <- read.table(as.character(args$regions), sep="\t", header=TRUE)
 
 # scan only on the TFBS specified in input file
 if (args$full_jaspar == FALSE){  # if args$full_jaspar is TRUE use the entire JASPAR list - will be huge for large set of regions
-  pwm_list_reduced = pwm_list[unique(TFBS_to_scan$jaspar_internal)]
+  # load the names of TFs that we want to scan for
+  TFBS_to_scan = read.table(args$tf_list, header = TRUE)
+  pwm_list = pwm_list[unique(TFBS_to_scan$jaspar_internal)]
 }
 
 if ( args$verbose ) {
-  write(sprintf("Scanning %i regulatory regions with %i different TF binding motifs...", nrow(well_covered_regions), length(pwm_list_reduced)), stderr())
+  write(sprintf("Scanning %i regulatory regions with %i different TF binding motifs...", nrow(well_covered_regions), length(pwm_list)), stderr())
 }
 
-scanned_regions = scan_regions(well_covered_regions, pwm_list_reduced, min.score = args$min_score)
+scanned_regions = scan_regions(well_covered_regions, pwm_list, min.score = args$min_score)
 
 if ( args$verbose ) {
   write(sprintf("Finished scanning. Scanned regions list has %i entries.", length(scanned_regions)), stderr())

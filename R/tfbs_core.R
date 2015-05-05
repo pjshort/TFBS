@@ -70,14 +70,16 @@ check_overlap <- function(region_id, pos, JASPAR_annotation){
   
   # return any TF binding sites that pos coincides with
   region_slice = JASPAR_annotation[JASPAR_annotation$region_id == region_id, ]
-  region_slice[region_slice$start < pos & region_slice$stop > pos, ]
-  return(region_slice$name)
+  pos_match = region_slice[region_slice$start < pos & region_slice$stop > pos, ]
+  return(pos_match$name)
 }
 
 regions_TFBS_overlap <- function(region_ids, positions, JASPAR_annotation){
   
   # returns TF overlaps for every region_id, position pair that is passed
-  TF_overlaps = mapply(check_overlap, region_ids, positions, MoreArgs = list("JASPAR_annotation" = JASPAR_annotation))
+  JASPAR_annotation$region_id <- factor(JASPAR_annotation$region_id, levels = levels(region_ids))
+  JA <- JASPAR_annotation[!is.na(JASPAR_annotation$region_id),]
+  TF_overlaps = mapply(check_overlap, region_ids, positions, MoreArgs = list("JASPAR_annotation" = JA))
   return(TF_overlaps)
 }
 
