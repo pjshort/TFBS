@@ -3,8 +3,8 @@
 library(optparse)
 
 option_list <- list(
-  make_option("--n_chunks", default = 10, help = "Choose the number of files to split into."),
-  make_option("--base_name", default="../data/region_chunk",
+  make_option("--n_chunks", default = 20, help = "Choose the number of files to split into."),
+  make_option("--base_name", default="../data/chunks/region_JASPAR_annotated",
               help="Set location to save the (likely large) tab-delimited text file storing JASPAR annotations.")
 )
 
@@ -16,5 +16,5 @@ for (i in seq(args$n_chunks)){
   chunks[[i]] = read.table(fname, sep = "\t", header = TRUE)
 }
 
-full_regions = do.call(rbind, chunks)
-
+JASPAR_annotation = do.call(rbind, chunks)
+write.table(JASPAR_annotation, file = "../data/regions_JASPAR_annotated.txt", sep = "\t", col.names = TRUE, row.names = FALSE)
