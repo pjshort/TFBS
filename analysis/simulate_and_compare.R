@@ -99,7 +99,7 @@ if ( args$mean_only) { # don't record result of every simulation
                                     "sim_mean" = sim_mean, "sim_sd" = sim_sd, "sim_se" = sim_se, row.names = NULL)
   write.table(TFBS_binding_results, file = paste0(args$out_dir, "/TFBS_simulation_annotation.txt"), row.names = FALSE, sep = "\t", col.names = TRUE, quote = FALSE)
   if ( args$verbose ) {
-    write(sprintf("Finished! Simulated de novos analyzed by JASPAR. Stats aggregated and saved to: %s", paste0(args$out_dir, "/TFBS_simulation_annotation.txt"), stderr())
+    write(sprintf("Finished! Simulated de novos analyzed by JASPAR. Stats aggregated and saved to: %s", paste0(args$out_dir, "/TFBS_simulation_annotation.txt"), stderr()))
   }
   
 } else { # record result of every simulation
