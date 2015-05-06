@@ -1,5 +1,10 @@
 # script to run large set of simulations and annotate with JASPAR pipeline
 
+# this script will create several files of relevant statistics and annotations
+  # 1. n_TFBS X iterations dataframe saved as TFBS_simulation_annotation.txt
+  # 2. summary stats with number of de novos overlapping a TFBS, number of TFBS overlapped by de novos
+  # 3. n_snps X iterations dataframe with the number of TFBS overlapped by each de novo
+
 # depends on:
 source("../R/simulate.R")
 source("../R/tfbs_core.R")
@@ -13,7 +18,7 @@ option_list <- list(
   make_option("--iterations", default=20,
               help="Pass a list of TFs to be run against regions."),
   make_option("--mean_only", action="store_true", default=FALSE),  # flag this option for much smaller output fileb
-  make_option("--out", default="../data/TFBS_simulation_annotation.txt",
+  make_option("--out_dir", default="../data/",
               help="Set location to save the (likely large) tab-delimited text file storing JASPAR annotations."),
   make_option("--jaspar_annotated_regions", default="../data/regions_JASPAR_annotated_FULL.txt",
               help="Pass a list of TFs to be run against regions."),
@@ -92,20 +97,30 @@ if ( args$mean_only) { # don't record result of every simulation
   TFBS_binding_results = data.frame("jaspar_internal" = colnames(standardized), "tf_names" = 
                                       as.character(sapply(colnames(standardized), function(x) pwm_list[x][[1]]@name)), 
                                     "sim_mean" = sim_mean, "sim_sd" = sim_sd, "sim_se" = sim_se, row.names = NULL)
-  write.table(TFBS_binding_results, file = args$out, row.names = FALSE, sep = "\t", col.names = TRUE, quote = FALSE)
+  write.table(TFBS_binding_results, file = paste0(args$out_dir, "/TFBS_simulation_annotation.txt"), row.names = FALSE, sep = "\t", col.names = TRUE, quote = FALSE)
   if ( args$verbose ) {
-    write(sprintf("Finished! Simulated de novos analyzed by JASPAR. Stats aggregated and saved to: %s", args$out), stderr())
+    write(sprintf("Finished! Simulated de novos analyzed by JASPAR. Stats aggregated and saved to: %s", args$out_dir), stderr())
   }
   
 } else { # record result of every simulation
   standardized = t(standardized)
   tf_names = as.character(sapply(rownames(standardized), function(x) pwm_list[x][[1]]@name))
   TFBS_binding_results = cbind(rownames(standardized), tf_names, as.integer(standardized))
-  write.table(TFBS_binding_results, file = args$out, row.names = FALSE, sep = ",", col.names = TRUE, quote = FALSE)
+  write.table(TFBS_binding_results, file = paste0(args$out_dir, "/TFBS_simulation_annotation.txt"), row.names = FALSE, sep = ",", col.names = TRUE, quote = FALSE)
   if ( args$verbose ) {
-    write(sprintf("Finished! Simulated de novos analyzed by JASPAR. Stats aggregated and saved to: %s in COMMA SEPARATED FORMAT.", args$out), stderr())
+    write(sprintf("Finished! Simulated de novos analyzed by JASPAR. Stats aggregated and saved to: %s in COMMA SEPARATED FORMAT.", args$out_dir), stderr())
   }
 }
+
+sim_hits_per_de_novo = apply(sim_output[3,,], 2, as.numeric)  # n_snps X iterations with number of TFBS hit per de novo. user can >0 this if needed
+
+write.table(sim_hits_per_de_novo, file = paste0(args$out_dir, "/TFBS_simulation_counts.txt"))
+
+hits_total = colSums(sim_hits_per_de_novo)
+hits_logical = colSums(sim_hits_per_de_novo > 0)
+
+write.table(rbind(hits_total, hits_logical), file = paste0(args$out_dir, "/TFBS_global_counts.txt"), row.names = c("total_hits", "n_de_novos_with_TFBS_hit"), sep = ",", col.names = FALSE, quote = FALSE)
+
 
 
 
