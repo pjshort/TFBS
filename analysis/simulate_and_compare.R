@@ -17,7 +17,7 @@ option_list <- list(
               help="Pass the genomic regions that should be annotated with predicted TF binding sites."),
   make_option("--iterations", default=20,
               help="Pass a list of TFs to be run against regions."),
-  make_option("--mean_only", action="store_true", default=FALSE),  # flag this option for much smaller output fileb
+  make_option("--mean_only", action="store_true", default=FALSE, help = "Output simulation TFBS binding mean, SD, SE only." ),
   make_option("--out_dir", default="../data/",
               help="Set location to save the (likely large) tab-delimited text file storing JASPAR annotations."),
   make_option("--jaspar_annotated_regions", default="../data/regions_JASPAR_annotated_FULL.txt",
@@ -99,16 +99,17 @@ if ( args$mean_only) { # don't record result of every simulation
                                     "sim_mean" = sim_mean, "sim_sd" = sim_sd, "sim_se" = sim_se, row.names = NULL)
   write.table(TFBS_binding_results, file = paste0(args$out_dir, "/TFBS_simulation_annotation.txt"), row.names = FALSE, sep = "\t", col.names = TRUE, quote = FALSE)
   if ( args$verbose ) {
-    write(sprintf("Finished! Simulated de novos analyzed by JASPAR. Stats aggregated and saved to: %s", args$out_dir), stderr())
+    write(sprintf("Finished! Simulated de novos analyzed by JASPAR. Stats aggregated and saved to: %s", paste0(args$out_dir, "/TFBS_simulation_annotation.txt"), stderr())
   }
   
 } else { # record result of every simulation
   standardized = t(standardized)
-  tf_names = as.character(sapply(rownames(standardized), function(x) pwm_list[x][[1]]@name))
-  TFBS_binding_results = cbind(rownames(standardized), tf_names, as.integer(standardized))
+  jaspar_internal = rownames(standardized)
+  tf_names = as.character(sapply(jaspar_internal, function(x) pwm_list[x][[1]]@name))
+  TFBS_binding_results = cbind(jaspar_internal, tf_names, standardized)
   write.table(TFBS_binding_results, file = paste0(args$out_dir, "/TFBS_simulation_annotation.txt"), row.names = FALSE, sep = ",", col.names = TRUE, quote = FALSE)
   if ( args$verbose ) {
-    write(sprintf("Finished! Simulated de novos analyzed by JASPAR. Stats aggregated and saved to: %s in COMMA SEPARATED FORMAT.", args$out_dir), stderr())
+    write(sprintf("Finished! Simulated de novos analyzed by JASPAR. Full results saved to: %s in COMMA SEPARATED FORMAT.", paste0(args$out_dir, "/TFBS_simulation_annotation.txt"), stderr())
   }
 }
 
