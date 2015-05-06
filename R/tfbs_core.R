@@ -70,7 +70,7 @@ check_overlap <- function(region_id, pos, JASPAR_annotation){
   
   # return any TF binding sites that pos coincides with
   region_slice = JASPAR_annotation[JASPAR_annotation$region_id == region_id, ]
-  pos_match = region_slice[region_slice$start < pos & region_slice$stop > pos, ]
+  pos_match = region_slice[region_slice$start <= pos & region_slice$stop >= pos, ]
   return(as.character(pos_match$name))
 }
 
