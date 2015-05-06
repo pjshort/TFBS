@@ -109,7 +109,7 @@ if ( args$mean_only) { # don't record result of every simulation
   TFBS_binding_results = cbind(jaspar_internal, tf_names, standardized)
   write.table(TFBS_binding_results, file = paste0(args$out_dir, "/TFBS_simulation_annotation.txt"), row.names = FALSE, sep = ",", col.names = TRUE, quote = FALSE)
   if ( args$verbose ) {
-    write(sprintf("Finished! Simulated de novos analyzed by JASPAR. Full results saved to: %s in COMMA SEPARATED FORMAT.", paste0(args$out_dir, "/TFBS_simulation_annotation.txt"), stderr())
+    write(sprintf("Finished! Simulated de novos analyzed by JASPAR. Full results saved to: %s in COMMA SEPARATED FORMAT.", paste0(args$out_dir, "/TFBS_simulation_annotation.txt"), stderr()))
   }
 }
 
