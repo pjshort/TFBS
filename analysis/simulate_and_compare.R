@@ -92,7 +92,7 @@ if ( args$mean_only) { # don't record result of every simulation
   TFBS_binding_results = data.frame("jaspar_internal" = colnames(standardized), "tf_names" = 
                                       as.character(sapply(colnames(standardized), function(x) pwm_list[x][[1]]@name)), 
                                     "sim_mean" = sim_mean, "sim_sd" = sim_sd, "sim_se" = sim_se, row.names = NULL)
-  write.table(TFBS_binding_results, file = args$out, row.names = FALSE, sep = "\t", col.names = TRUE)
+  write.table(TFBS_binding_results, file = args$out, row.names = FALSE, sep = "\t", col.names = TRUE, quote = FALSE)
   if ( args$verbose ) {
     write(sprintf("Finished! Simulated de novos analyzed by JASPAR. Stats aggregated and saved to: %s", args$out), stderr())
   }
@@ -100,8 +100,11 @@ if ( args$mean_only) { # don't record result of every simulation
 } else { # record result of every simulation
   standardized = t(standardized)
   tf_names = as.character(sapply(rownames(standardized), function(x) pwm_list[x][[1]]@name))
-  TFBS_binding_results = cbind(rownames(standardized), tf_names, standardized)
-  write.table(TFBS_binding_results, file = args$out, row.names = FALSE, sep = ",", col.names = FALSE)
+  TFBS_binding_results = cbind(rownames(standardized), tf_names, as.integer(standardized))
+  write.table(TFBS_binding_results, file = args$out, row.names = FALSE, sep = ",", col.names = TRUE, quote = FALSE)
+  if ( args$verbose ) {
+    write(sprintf("Finished! Simulated de novos analyzed by JASPAR. Stats aggregated and saved to: %s in COMMA SEPARATED FORMAT.", args$out), stderr())
+  }
 }
 
 
