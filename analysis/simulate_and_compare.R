@@ -34,7 +34,7 @@ if (!is.null(args$n_snps)){
 
 ## load datasets ##
 
-opts = list("species" = "Homo sapiens", "all_versions" = TRUE, "matrixtype" = "PWM")
+opts = list("species" = 9606, "all_versions" = TRUE, "matrixtype" = "PWM") # 9606 = "homo sapiens"
 pwm_list = getMatrixSet(JASPAR2014, opts)
 
 # regions are annotated by n_snps and n_indels - created by rupit/R/pre_process.R
