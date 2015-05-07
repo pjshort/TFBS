@@ -15,7 +15,7 @@ library(optparse)
 option_list <- list(
   make_option("--n_snps", default=NULL,
               help="Pass the genomic regions that should be annotated with predicted TF binding sites."),
-  make_option("--iterations", default=20,
+  make_option("--iterations", default=100,
               help="Pass a list of TFs to be run against regions."),
   make_option("--mean_only", action="store_true", default=FALSE, help = "Output simulation TFBS binding mean, SD, SE only." ),
   make_option("--out_dir", default="../data/",

@@ -66,11 +66,11 @@ scan_regions <- function(regions, pwm_list, min.score = "95%"){
 
 ## Functions to check overlap with PWM seq_list object
 
-check_overlap <- function(region_id, pos, JASPAR_annotation){
+check_overlap <- function(region_id, rel_pos, JASPAR_annotation){
   
   # return any TF binding sites that pos coincides with
   region_slice = JASPAR_annotation[JASPAR_annotation$region_id == region_id, ]
-  pos_match = region_slice[region_slice$start <= pos & region_slice$stop >= pos, ]
+  pos_match = region_slice[region_slice$start <= rel_pos & region_slice$stop >= rel_pos, ]
   return(as.character(pos_match$name))
 }
 
@@ -102,11 +102,10 @@ table_merge <- function(table1, table2, row.names = c("table1", "table2")){
   new_table2 = table(row.names = all_names) - 1
   
   # set nonzero entries from original tables
-  new_table1[all_names %in% names(table1)] = table1
-  new_table2[all_names %in% names(table2)] = table2
+  new_table1[row.names(new_table1) %in% names(table1)] = table1
+  new_table2[row.names(new_table2) %in% names(table2)] = table2
   m = rbind(new_table1, new_table2)
   row.names(m) = row.names
-  
   return(m)
 }
 
