@@ -79,3 +79,13 @@ stacked_bar <- function(counts, labels, group_names, ylab = "Counts", beside = F
   bar <- barplot(counts, las=1, col = col, names.arg = labels, legend.text = group_names, ylab = ylab, beside = beside)
   return(bar)  
 }
+
+sim_hist <- function(counts, observed, xlab = "Simulation Outcomes", main = "Comparing Observation to Simulation", col = "cyan"){
+  
+  # makes a histogram of simulation outcomes and plots observed counts as dotted black line
+  
+  breaks = seq(min(min(counts), observed) - 0.5, max(max(counts), observed) + 0.5,1)
+  h = hist(counts, xlab=xlab, main=main, breaks = breaks, col=col, xaxt="n")
+  axis(side=1, at = breaks + 0.5, labels=breaks + 0.5)
+  abline(v=observed, col="black", lty=3, lw=5)
+}
