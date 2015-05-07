@@ -42,12 +42,11 @@ simulation_TFBS_overlap <- function(s, JASPAR_annotation){
   
   # takes slice of sim_output called s and returns TF overlaps from JASPAR annotation provided
   region_ids = s[1,]
-  positions = as.integer(s[2,])
+  rel_positions = as.integer(s[2,]) # relative to region start (not absolute) genomic position
   # returns TF overlaps for every region_id, position pair that is passed
   JA <- JASPAR_annotation[JASPAR_annotation$region_id %in% region_ids,]
   JA$region_id <- factor(JA$region_id)  
-  TF_overlaps = mapply(check_overlap, region_ids, positions, MoreArgs = list("JASPAR_annotation" = JA))
-  counts_by_TFBS = table(unlist(TF_overlaps))
+  TF_overlaps = mapply(check_overlap, region_ids, rel_positions, MoreArgs = list("JASPAR_annotation" = JA))
   return(TF_overlaps)
 }
 
