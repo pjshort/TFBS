@@ -35,7 +35,6 @@ pwm_list = getMatrixSet(JASPAR2014, opts)
 
 # regions are annotated by n_snps and n_indels - created by rupit/R/pre_process.R
 well_covered_regions <- read.table(as.character(args$regions), sep="\t", header=TRUE)
-well_covered_regions = well_covered_regions[1:10,]
 
 # scan only on the TFBS specified in input file
 if (args$full_jaspar == FALSE){  # if args$full_jaspar is TRUE use the entire JASPAR list - will be huge for large set of regions
