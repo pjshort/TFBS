@@ -71,6 +71,15 @@ jaspar_annotate <- function(sim_output, JASPAR_annotation){
   return(list("sim_output" = sim_output, "sim_TFBS_counts" = sim_TFBS_counts))
 }
 
+assign_ref_alt <- function(seq, rel_pos){
+  
+  # takes sequence and position of simulated de novo snp within the sequence and returns a randomly selected alt (from three remaining options)
+  ref = substr(seq, rel_pos, rel_pos)
+  nucleotides = c("A", "T", "C", "G")
+  alt = sample(nucleotides[!(ref == nucleotides)], 1)
+  
+}
+
 
 
 

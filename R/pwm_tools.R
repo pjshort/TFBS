@@ -19,7 +19,7 @@ binding_change <- function(jaspar_internal, rel_pos, seq, ref, alt, pwm_list, mi
   # get the position within the motif
   starts = site_seq_list@views@ranges@start
   stops = site_seq_list@views@ranges@start + site_seq_list@views@ranges@width - 1
-  intersects = rel_pos > starts & rel_pos < stops
+  intersects = rel_pos >= starts & rel_pos <= stops
   motif_pos = rel_pos - starts[intersects] + 1
       
   # use profileMatrix to compute score change from ref to alt at single position

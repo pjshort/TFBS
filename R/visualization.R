@@ -29,6 +29,45 @@ pal <- function(col, border = "light gray", ...){
 
 #pal(tol7qualitative)
 
+## ggplot2 extra for subplotting ##
+
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+  
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+  
+  numPlots = length(plots)
+  
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                     ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+  
+  if (numPlots==1) {
+    print(plots[[1]])
+    
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+      
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+
 basic_hist <- function(counts, xlab = "Counts", main = "Histogram of Counts", col = "cyan"){
   
   # makes a histogram of simulation outcomes and plots observed counts as dotted black line
@@ -54,12 +93,10 @@ two_panel_hist <- function(counts1, counts2, xlab = "Counts", mains = c("Categor
   layout(cbind(1,2))
   breaks = seq(min(c(counts1, counts2)) - 0.5, max(c(counts1, counts2)) + 0.5, 1)
 
-  
   par(mar=c(5,4,5,1) + 0.5)   # extra large bottom margin
   h1 = hist(counts1, xlab=xlab, main=mains[1], breaks = breaks, col=cols[1], xaxt="n", yaxt="n", freq=FALSE )
   axis(side=1, at = breaks+0.5, labels=breaks + 0.5)
   axis(side=2, at = seq(0,0.6,0.1), labels=seq(0,0.6,0.1))
-  
   
   par(mar=c(5,4,5,1) + 0.5)   # extra large bottom margin
   h2 = hist(counts2, xlab=xlab, main=mains[2], breaks = breaks, col=cols[2], xaxt="n", yaxt="n", freq=FALSE)

@@ -54,7 +54,6 @@ JASPAR_annotation <- read.table(args$jaspar_annotated_regions, sep="\t", header=
 jaspar_internal = as.character(unique(JASPAR_annotation$name))
 tf_names  = as.character(sapply(jaspar_internal, function(x) pwm_list[x][[1]]@name))
 
-
 # saved sequence relative probabilities
 #seq_probabilities = relative_seq_probabilities(well_covered_regions) # run these two lines to regenerate
 #save(seq_probabilities, file = "../data/sequence_probabilities.out")
@@ -70,6 +69,7 @@ sim_output = simulate_de_novos(well_covered_regions, seq_probabilities, snp_tota
 # annotate simulation data with JASPAR transcription factor binding sites
 if ( args$verbose ) {
   write("Annotating simulated de novos with predicted TFBS...", stderr())
+  write(sprintf("Approximate completion time: %s", Sys.time() + 100*system.time(jaspar_annotate(sim_output[1:2,snp_total,ceiling(iterations/100)], JASPAR_annotation)))
 }
 
 annotations = jaspar_annotate(sim_output, JASPAR_annotation) 
