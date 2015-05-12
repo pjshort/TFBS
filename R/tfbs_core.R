@@ -33,15 +33,14 @@ TFBS_bp_coverage <- function(seq, pwm_list, min.score = "95%"){
 }
 
 TFBS_hits <- function(seq, rel_pos, pwm_list, min.score = "95%"){
-  
   # returns 0 or 1 for each TFBS in the pwm_list
-  # one de novo may fall in multiple TFBS, or multiple instances of one TFBS (in this case eg highly repeated sections, 1 is still returned)
-  
+  # one de novo may fall in multiple TFBS, or multiple instances of one TFBS (in this case, 1 still returned)
+
   subject = DNAString(seq)
   site_seq_list = searchSeq(pwm_list, subject, seqname="seq1", min.score=min.score, strand="*")
-  return(site_seq_list)
+  TFBS_hits = sapply(site_seq_list, function(x) sum((rel_pos - x@views@ranges@start >= 0) & (x@views@ranges@start +x@views@ranges@width - rel_pos >= 0)) > 0)
+  return(unlist(TFBS_hits))
 }
-
 
 ## Functions to annotate regions with predicted transcription factor binding sites
 

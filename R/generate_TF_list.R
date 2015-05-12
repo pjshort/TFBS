@@ -1,4 +1,5 @@
-# scan DDD data against all JASPAR TFs
+# scan DDD data against all JASPAR TFs. Optionally, this can be run to get a reduced list of TFs to save time down the line 
+# (i.e. to only scan for TFs we know we are interested in for simulated data)
 
 source("tfbs_core.R") # depends on TFBSTools, JASPAR2014, BioStrings
 library(optparse)
@@ -12,7 +13,7 @@ option_list <- list(
   make_option("--de_novos", default="../data/de_novo_filtered.txt",
               help="Pass the observed de novos - these will be analyzed in order to shorten the list of TF binding sites used for prediction."),
   make_option("--out", default="../data/TFs_in_DDD_data.txt",
-              help="Set location to save the (likely large) tab-delimited text file storing JASPAR annotations.")
+              help="Set location for text file with TF names.")
 )
 
 args <- parse_args(OptionParser(option_list=option_list))
@@ -22,7 +23,7 @@ if ( args$verbose ) {
   write("Loading JASPAR position weight matrices from database...", stderr())
 }
 
-# NOTE: only need to initalize DB once - this should be done on install...?
+# TODO: only need to initalize DB once - this should be done on install...?
 #db = "myMatrixDb.sqlite"
 #initializeJASPARDB(db) 
 opts = list("species" = 9606, "all_versions" = TRUE, "matrixtype" = "PWM") # 9606 = "homo sapiens"
