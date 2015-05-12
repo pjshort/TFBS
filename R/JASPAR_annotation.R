@@ -45,6 +45,7 @@ if (args$full_jaspar == FALSE){  # if args$full_jaspar is TRUE use the entire JA
 
 if ( args$verbose ) {
   write(sprintf("Scanning %i regulatory regions with %i different TF binding motifs...", nrow(well_covered_regions), length(pwm_list)), stderr())
+  write(sprintf("Approximate completion time: %s", Sys.time() + 100*as.numeric(system.time(scan_regions(well_covered_regions[1:ceiling(nrow(well_covered_regions)/100),], pwm_list, min.score = "95%"))))
 }
 
 scanned_regions = scan_regions(well_covered_regions, pwm_list, min.score = args$min_score)
