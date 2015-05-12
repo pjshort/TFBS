@@ -12,7 +12,7 @@ option_list <- list(
               help="Pass the genomic regions that should be annotated with predicted TF binding sites."),
   make_option("--tf_list", default="../data/TFs_in_DDD_data.txt",
               help="Pass a list of TFs to be run against regions."),
-  make_option("--full_jaspar", action="store_true", default=FALSE,
+  make_option("--full_jaspar", action="store_true", default=TRUE,
               help="If TRUE annotates regions with the full JASPAR Homo Sapiens set. If false, must provide a --tflist"),
   make_option("--out", default="../data/regions_JASPAR_annotated.txt",
               help="Set location to save the (likely large) tab-delimited text file storing JASPAR annotations."),
@@ -27,7 +27,7 @@ if ( args$verbose ) {
   write("Loading JASPAR position weight matrices from database...", stderr())
 }
 
-# NOTE: only need to initalize DB once - this should be done on install...?
+# NOTE: only need to initalize DB once - this should be done on install...
 #db = "myMatrixDb.sqlite"
 #initializeJASPARDB(db)
 opts = list("species" = 9606, "all_versions" = TRUE, "matrixtype" = "PWM") # 9606 = "homo sapiens"
@@ -35,6 +35,7 @@ pwm_list = getMatrixSet(JASPAR2014, opts)
 
 # regions are annotated by n_snps and n_indels - created by rupit/R/pre_process.R
 well_covered_regions <- read.table(as.character(args$regions), sep="\t", header=TRUE)
+well_covered_regions = well_covered_regions[1:10,]
 
 # scan only on the TFBS specified in input file
 if (args$full_jaspar == FALSE){  # if args$full_jaspar is TRUE use the entire JASPAR list - will be huge for large set of regions

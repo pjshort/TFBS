@@ -1,5 +1,7 @@
 # visualization for TFBS analysis
 
+library(qqman)  # for plotting QQ plots (of p-values)
+
 # COLOR SCHEMES - from Paul Tol
 # Qualitative color schemes by Paul Tol
 tol1qualitative=c("#4477AA")
@@ -89,3 +91,11 @@ sim_hist <- function(counts, observed, xlab = "Simulation Outcomes", main = "Com
   axis(side=1, at = breaks + 0.5, labels=breaks + 0.5)
   abline(v=observed, col="black", lty=3, lw=5)
 }
+
+QQplot <- function(p_vals, main = "QQ plot of P-Values"){
+  
+  qq(p_vals, main = main)
+  
+}
+
+
