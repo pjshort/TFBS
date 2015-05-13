@@ -2,72 +2,6 @@
 
 library(qqman)  # for plotting QQ plots (of p-values)
 
-# COLOR SCHEMES - from Paul Tol
-# Qualitative color schemes by Paul Tol
-tol1qualitative=c("#4477AA")
-tol2qualitative=c("#4477AA", "#CC6677")
-tol3qualitative=c("#4477AA", "#DDCC77", "#CC6677")
-tol4qualitative=c("#4477AA", "#117733", "#DDCC77", "#CC6677")
-tol5qualitative=c("#332288", "#88CCEE", "#117733", "#DDCC77", "#CC6677")
-tol6qualitative=c("#332288", "#88CCEE", "#117733", "#DDCC77", "#CC6677","#AA4499")
-tol7qualitative=c("#332288", "#88CCEE", "#44AA99", "#117733", "#DDCC77", "#CC6677","#AA4499")
-tol8qualitative=c("#332288", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", "#CC6677","#AA4499")
-tol9qualitative=c("#332288", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", "#CC6677", "#882255", "#AA4499")
-tol10qualitative=c("#332288", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", "#661100", "#CC6677", "#882255", "#AA4499")
-tol11qualitative=c("#332288", "#6699CC", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", "#661100", "#CC6677", "#882255", "#AA4499")
-tol12qualitative=c("#332288", "#6699CC", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", "#661100", "#CC6677", "#AA4466", "#882255", "#AA4499")
-
-col_list = list(tol1qualitative,tol2qualitative, tol3qualitative, tol4qualitative, tol5qualitative, 
-                tol6qualitative, tol7qualitative, tol8qualitative, tol9qualitative, tol10qualitative, tol11qualitative, tol12qualitative)
-
-pal <- function(col, border = "light gray", ...){
-  n <- length(col)
-  plot(0, 0, type="n", xlim = c(0, 1), ylim = c(0, 1),
-       axes = FALSE, xlab = "", ylab = "", ...)
-  rect(0:(n-1)/n, 0, 1:n/n, 1, col = col, border = border)
-}
-
-#pal(tol7qualitative)
-
-## ggplot2 extra for subplotting ##
-
-multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-  library(grid)
-  
-  # Make a list from the ... arguments and plotlist
-  plots <- c(list(...), plotlist)
-  
-  numPlots = length(plots)
-  
-  # If layout is NULL, then use 'cols' to determine layout
-  if (is.null(layout)) {
-    # Make the panel
-    # ncol: Number of columns of plots
-    # nrow: Number of rows needed, calculated from # of cols
-    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
-                     ncol = cols, nrow = ceiling(numPlots/cols))
-  }
-  
-  if (numPlots==1) {
-    print(plots[[1]])
-    
-  } else {
-    # Set up the page
-    grid.newpage()
-    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
-    
-    # Make each plot, in the correct location
-    for (i in 1:numPlots) {
-      # Get the i,j matrix positions of the regions that contain this subplot
-      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
-      
-      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
-                                      layout.pos.col = matchidx$col))
-    }
-  }
-}
-
-
 basic_hist <- function(counts, xlab = "Counts", main = "Histogram of Counts", col = "cyan"){
   
   # makes a histogram of simulation outcomes and plots observed counts as dotted black line
@@ -133,6 +67,74 @@ QQplot <- function(p_vals, main = "QQ plot of P-Values"){
   
   qq(p_vals, main = main)
   
+}
+
+#### EXTRAS - non essential functions for color schemes, multiplotting, etc ####
+
+
+# COLOR SCHEMES - from Paul Tol
+# Qualitative color schemes by Paul Tol
+tol1qualitative=c("#4477AA")
+tol2qualitative=c("#4477AA", "#CC6677")
+tol3qualitative=c("#4477AA", "#DDCC77", "#CC6677")
+tol4qualitative=c("#4477AA", "#117733", "#DDCC77", "#CC6677")
+tol5qualitative=c("#332288", "#88CCEE", "#117733", "#DDCC77", "#CC6677")
+tol6qualitative=c("#332288", "#88CCEE", "#117733", "#DDCC77", "#CC6677","#AA4499")
+tol7qualitative=c("#332288", "#88CCEE", "#44AA99", "#117733", "#DDCC77", "#CC6677","#AA4499")
+tol8qualitative=c("#332288", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", "#CC6677","#AA4499")
+tol9qualitative=c("#332288", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", "#CC6677", "#882255", "#AA4499")
+tol10qualitative=c("#332288", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", "#661100", "#CC6677", "#882255", "#AA4499")
+tol11qualitative=c("#332288", "#6699CC", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", "#661100", "#CC6677", "#882255", "#AA4499")
+tol12qualitative=c("#332288", "#6699CC", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", "#661100", "#CC6677", "#AA4466", "#882255", "#AA4499")
+
+col_list = list(tol1qualitative,tol2qualitative, tol3qualitative, tol4qualitative, tol5qualitative, 
+                tol6qualitative, tol7qualitative, tol8qualitative, tol9qualitative, tol10qualitative, tol11qualitative, tol12qualitative)
+
+pal <- function(col, border = "light gray", ...){
+  n <- length(col)
+  plot(0, 0, type="n", xlim = c(0, 1), ylim = c(0, 1),
+       axes = FALSE, xlab = "", ylab = "", ...)
+  rect(0:(n-1)/n, 0, 1:n/n, 1, col = col, border = border)
+}
+
+#pal(tol7qualitative)
+
+## ggplot2 extra for subplotting ##
+
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+  
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+  
+  numPlots = length(plots)
+  
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                     ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+  
+  if (numPlots==1) {
+    print(plots[[1]])
+    
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+      
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
 }
 
 
